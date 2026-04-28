@@ -24,13 +24,16 @@ void inserir_inicio(Celula *p, Celula **u, int x)
 
 int remover_inicio(Celula *p)
 {
-  Celula *tmp = p;
-  p = p->prox;
-  int valor = p->elemento;
-  tmp->prox->ant= tmp->prox  = NULL;
-  tmp = NULL;
+  Celula *tmp = p->prox;
+  int elemento = tmp->elemento;
+  p->prox = tmp->prox;
 
-  return valor;  
+  if(tmp->prox != NULL)
+    tmp->prox->ant = p;
+
+  free(tmp);
+  
+  return elemento;  
 }
 void inserir_fim(Celula **u, int x)
 {
@@ -43,10 +46,12 @@ void inserir_fim(Celula **u, int x)
 }
 int remover_fim(Celula **u)
 {
-  *u = (*u)->ant;
-  (*u)->ant->prox = NULL;
+  Celula *tmp = *u;
   int valor = (*u)->elemento;
-
+  *u = tmp->ant;
+  (*u)->prox = NULL;
+  free(tmp);
+  
   return valor;
 }
 void mostrar_lista(Celula *p)
@@ -69,6 +74,8 @@ int main()
   inserir_inicio(primeiro,&ultimo, 20);
   inserir_inicio(primeiro,&ultimo, 40);
   inserir_fim(&ultimo, 15);
+  remover_inicio(primeiro);
+  remover_fim(&ultimo);
 
   mostrar_lista(primeiro);
   
